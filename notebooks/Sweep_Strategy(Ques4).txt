@@ -1,0 +1,20 @@
+For this hyperparameter search, the following parameters were tuned:
+- Epochs: 5, 10 → 2 options  
+- Number of hidden layers: 3, 4, 5 → 3 options  
+- Hidden layer size: 32, 64, 128 → 3 options  
+- Learning rate: 0.001, 0.0001 → 2 options  
+- Optimizer: sgd, momentum, nesterov, rmsprop, adam, nadam → 6 options  
+- Batch size: 16, 32, 64 → 3 options  
+Total combinations (if exhaustive) = 2 × 3 × 3 × 2 × 6 × 3 = 648 
+Because trying all 648 combinations would be very time-consuming, the sweep uses Bayesian optimization (`method="bayes"`) which:
+- Focuses on the most promising hyperparameter regions based on past runs.  
+- Balances exploration (trying new configurations) and exploitation (focusing on configurations that gave better validation accuracy).  
+- Allows us to efficiently find the hyperparameters that maximize validation accuracy (`val_accuracy`).  
+Additional Sweep Details from Code:  
+- Metric optimized: `val_accuracy` (goal: maximize)  
+- Number of runs: 20 (`count=20` in `wandb.agent`)  
+- Each run dynamically generates a descriptive run name:  
+  `hl_{num_layers}_bs_{batch_size}_opt_{optimizer}`  
+  → e.g., `hl_3_bs_16_opt_adam` indicates 3 hidden layers, batch size 16, and Adam optimizer.  
+Reasoning:
+Using Bayesian sweep with 20 runs allows the network to efficiently explore 648 possible hyperparameter combinations, focusing on configurations that improve validation performance while keeping computation time manageable.
