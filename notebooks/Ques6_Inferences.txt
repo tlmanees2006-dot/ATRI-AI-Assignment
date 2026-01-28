@@ -1,0 +1,33 @@
+Hyperparameter Analysis from W&B Plots
+
+How the plots were used
+    ✶ Used W&B's Parallel Coordinates Plot to track how hyperparameter configurations flow across axes to final val_accuracy - thick line clusters show successful configs, thin/sparse lines show failures.  
+    ✶ Correlation Summary quantifies each parameter's relative importance and direction of influence on val_accuracy.
+
+Parameters considered (from sweep_config)
+    - num_layers: [3, 4, 5]  
+    - hidden_size: [32, 64, 128]  
+    - batch_size: [16, 32, 64]  
+    - learning_rate: [1e-3, 1e-4]  
+    - optimizer: ["sgd", "momentum", "nesterov", "rmsprop", "adam", "nadam"]  
+    - epochs: [5, 10]  
+    - val_accuracy`: optimization target
+
+Observations from Parallel Coordinates Plot
+    - Many configurations <65% val_accuracy: Dense low-accuracy cluster for optimizer='sgd'/momentum + learning_rate=1e-4 (matches Q5 plot patterns).
+    - learning_rate=1e-3 dominates high paths: Clear separation - 1e-3 lines flow to top val_accuracy region.
+    - hidden_size=32 underfits: Thin lines terminate early; 64-128 form thick high-accuracy bundles.
+    - num_layers=3-4 more consistent: Layer=5 shows line divergence/scattering.
+    - batch_size=16 noisier: More line breakup vs stable 32-64 paths.
+    - adam/nadam dominate top region: Adaptive optimizers create thick high val_accuracy lines; `sgd` shows high variance.
+    - epochs=5` underfits: Lines terminate before peak accuracy; epochs=10 reaches convergence zone.
+
+Correlation Summary Insights
+    ✶ learning_rate shows highest importance/strongest correlation to val_accuracy.  
+    ✶ optimizer (adam/nadam) has strong positive influence.  
+    ✶ hidden_size contributes moderately.  
+    ✶ batch_size, num_layers, epochs have weaker but noticeable effects.
+
+Recommended Configuration (targets top val_accuracy paths)
+    learning_rate=1e-3, optimizer='adam', hidden_size=128, num_layers=4, batch_size=32, epochs=10
+This exact combination clusters in the upper val_accuracy region of parallel coordinates plot and aligns with correlation summary priorities.
