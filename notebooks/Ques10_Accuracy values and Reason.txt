@@ -1,0 +1,25 @@
+The 3 Configuration    
+        1.Config 1 
+            Hidden Layers : [128, 128, 128] 
+            Optimizer : Adam
+            Learning Rate : 0.001
+        2.Config 2 
+            Hidden Layers : [128, 128, 128, 128, 128] 
+            Optimizer : Nadam 
+            Learning Rate : 0.001 
+        3.Config 3
+            Hidden Layers : [64, 64]
+            Optimizer : Adam
+            Learning Rate : 0.001
+
+Reason:
+Based on my extensive experimentation with the Fashion-MNIST dataset, 
+I chose these three configurations for MNIST because:
+           -Stability over Complexity: My FNN class implementation showed that a 3-layer setup (Config 1) provided the most stable gradient flow. I recommended this to see if the same balance applies to digit recognition.
+           -Optimizer Efficiency: I chose Adam for the majority of the runs because my prior tests proved it handles sparse data better than basic SGD.
+           -Model Depth Trade-off: I included a 5-layer Nadam setup (Config 2) to observe if the Nesterov momentum helps deeper networks converge faster on simpler datasets like MNIST.
+
+Accuracies:
+Config 1 (Best Overall): 0.9777 (97%)
+Config 2 (Deep Feature): 0.9513 (95%)
+Config 3 (Lightweight): 0.9731 (97%)
